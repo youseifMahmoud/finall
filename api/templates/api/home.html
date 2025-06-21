@@ -149,15 +149,15 @@
 
         // دالة لجلب آخر موقع محفوظ وعرضه
         function fetchLastLocation() {
-    const userId = localStorage.getItem("user_id"); // قراءة user_id من localStorage
+    const userId = localStorage.getItem("user_id");
 
     if (!userId) {
         alert("User ID is missing. Please log in again.");
-        window.location.href = "http://127.0.0.1:8000/login/";
+        window.location.href = "http://13.48.203.4:8000/login/";
         return;
     }
 
-    fetch(`http://127.0.0.1:8000/get-last-location/?user_id=${userId}`) // إرسال user_id كـ query parameter
+    fetch(`http://13.48.203.4:8000/get-last-location/?user_id=${userId}`)
         .then(response => {
             if (!response.ok) throw new Error(`خطأ في الشبكة: ${response.status}`);
             const contentType = response.headers.get('content-type');
@@ -188,8 +188,8 @@
                             خط الطول: ${longitude.toFixed(4)}<br>
                             <strong>اسم المكان:</strong><br>
                             ${placeName}<br>
-                            <a href="https://maps.google.com/?q=${latitude},${longitude}" 
-                            target="_blank" 
+                            <a href="https://maps.google.com/?q=${latitude},${longitude}"
+                            target="_blank"
                             style="color: #4CAF50; text-decoration: underline;">
                                 عرض على خرائط جوجل
                             </a>
@@ -201,22 +201,16 @@
                             <strong>الإحداثيات:</strong><br>
                             خط العرض: ${latitude.toFixed(4)}<br>
                             خط الطول: ${longitude.toFixed(4)}<br>
-                            <strong>اسم المكان:</strong><br>
-                            غير متاح<br>
-                            <a href="https://maps.google.com/?q=${latitude},${longitude}" 
-                            target="_blank" 
-                            style="color: #4CAF50; text-decoration: underline;">
-                                عرض على خرائط جوجل
-                            </a>
+                            <em>تعذر جلب اسم المكان</em>
                         `;
                     });
             } else {
-                alert(`خطأ: ${data.message}`);
+                document.getElementById('recent-place').innerHTML = `<span style="color:red;">${data.message}</span>`;
             }
         })
         .catch(error => {
-            console.error('حدث خطأ:', error);
-            alert(`فشل في جلب الموقع: ${error.message}`);
+            console.error('حدث خطأ أثناء جلب آخر موقع:', error);
+            document.getElementById('recent-place').innerHTML = `<span style="color:red;">حدث خطأ: ${error.message}</span>`;
         });
 }
 
